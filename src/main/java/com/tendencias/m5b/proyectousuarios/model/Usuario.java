@@ -9,9 +9,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -41,5 +45,23 @@ public class Usuario {
     
     @Column(name = "estado")
     private int estado;
+    
+    
+    @ManyToOne
+    @JoinColumn(name="id_persona", referencedColumnName="id_persona")
+    private Persona persona;
+    
+    
+    @ManyToOne
+    @JoinColumn(name="id_rol", referencedColumnName="id_rol")
+    private Rol rol;
+    
+    
+    @OneToMany(mappedBy = "usuario")
+    private List<Ventas> ventas;
+    
+    
+    @OneToMany(mappedBy = "usuario")
+    private List<Compra> compras;
     
 }

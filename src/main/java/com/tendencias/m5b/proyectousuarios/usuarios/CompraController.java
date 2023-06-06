@@ -4,7 +4,9 @@
  */
 package com.tendencias.m5b.proyectousuarios.usuarios;
 
+import com.tendencias.m5b.proyectousuarios.model.Compra;
 import com.tendencias.m5b.proyectousuarios.model.Usuario;
+import com.tendencias.m5b.proyectousuarios.service.CompraServiceImpl;
 import com.tendencias.m5b.proyectousuarios.service.UsuarioServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
@@ -24,35 +26,37 @@ import org.springframework.web.bind.annotation.RestController;
  * @author HP
  */
 @RestController
-@RequestMapping("/usuario")
-public class UsuarioController {
+@RequestMapping("/compra")
+public class CompraController {
     @Autowired
-    UsuarioServiceImpl usuarioService;
+    CompraServiceImpl compraService;
 
-    @Operation(summary = "Se obtiene la lista de Usuarios")
+    @Operation(summary = "Se obtiene la lista")
     @GetMapping("/listar")
-    public ResponseEntity<List<Usuario>> listaUsuarios() {
-        return new ResponseEntity<>(usuarioService.findByAll(), HttpStatus.OK);
+    public ResponseEntity<List<Compra>> listaCompra() {
+        return new ResponseEntity<>(compraService.findByAll(), HttpStatus.OK);
     }
 
-    @Operation(summary = "Debe enviar los campos del Usuario")
+    @Operation(summary = "Debe enviar los campos")
     @PostMapping("/crear")
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario u) {
-        return new ResponseEntity<>(usuarioService.save(u), HttpStatus.CREATED);
+    public ResponseEntity<Compra> crearCompra(@RequestBody Compra u) {
+        return new ResponseEntity<>(compraService.save(u), HttpStatus.CREATED);
     }
 
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Integer id, @RequestBody Usuario u) {
-        Usuario usuario = usuarioService.findById(id);
-        if (usuario != null) {
+    public ResponseEntity<Compra> actualizarCompra(@PathVariable Integer id, @RequestBody Compra u) {
+       Compra compra = compraService.findById(id);
+        if (compra != null) {
             try {
-                usuario.setNombre(u.getNombre());
-                usuario.setClave(u.getClave());
-                usuario.setEstado(u.getEstado());
-                usuario.setEmail(u.getEmail());
-                usuario.setPersona(u.getPersona());
-                usuario.setRol(u.getRol());
-                return new ResponseEntity<>(usuarioService.save(usuario), HttpStatus.CREATED);
+                
+                compra.setDescripcion_compra(u.getDescripcion_compra());
+                compra.setCompra_fecha(u.getCompra_fecha());
+                compra.setUsuario(u.getUsuario());
+                compra.setProducto(u.getProducto());
+                
+                
+                
+                return new ResponseEntity<>(compraService.save(compra), HttpStatus.CREATED);
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -62,8 +66,8 @@ public class UsuarioController {
         }
     }
 
-    public ResponseEntity<Usuario> elimiarUsuario(@PathVariable Integer id) {
-        usuarioService.delete(id);
+    public ResponseEntity<Compra> elimiarCompra(@PathVariable Integer id) {
+        compraService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

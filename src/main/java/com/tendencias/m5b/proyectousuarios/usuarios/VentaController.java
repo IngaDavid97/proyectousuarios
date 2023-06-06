@@ -5,8 +5,11 @@
 package com.tendencias.m5b.proyectousuarios.usuarios;
 
 import com.tendencias.m5b.proyectousuarios.model.Usuario;
+import com.tendencias.m5b.proyectousuarios.model.Ventas;
 import com.tendencias.m5b.proyectousuarios.service.UsuarioServiceImpl;
+import com.tendencias.m5b.proyectousuarios.service.VentasServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.HashSet;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,35 +27,35 @@ import org.springframework.web.bind.annotation.RestController;
  * @author HP
  */
 @RestController
-@RequestMapping("/usuario")
-public class UsuarioController {
+@RequestMapping("/venta")
+public class VentaController {
     @Autowired
-    UsuarioServiceImpl usuarioService;
+    VentasServiceImpl ventasService;
 
-    @Operation(summary = "Se obtiene la lista de Usuarios")
+    @Operation(summary = "Se obtiene la lista de ventas")
     @GetMapping("/listar")
-    public ResponseEntity<List<Usuario>> listaUsuarios() {
-        return new ResponseEntity<>(usuarioService.findByAll(), HttpStatus.OK);
+    public ResponseEntity<List<Ventas>> listaVentas() {
+        return new ResponseEntity<>(ventasService.findByAll(), HttpStatus.OK);
     }
 
-    @Operation(summary = "Debe enviar los campos del Usuario")
+    @Operation(summary = "Debe enviar ventas")
     @PostMapping("/crear")
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario u) {
-        return new ResponseEntity<>(usuarioService.save(u), HttpStatus.CREATED);
+    public ResponseEntity<Ventas> crearVentas(@RequestBody Ventas u) {
+        return new ResponseEntity<>(ventasService.save(u), HttpStatus.CREATED);
     }
 
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Integer id, @RequestBody Usuario u) {
-        Usuario usuario = usuarioService.findById(id);
-        if (usuario != null) {
+    public ResponseEntity<Ventas> actualizarVentas(@PathVariable Integer id, @RequestBody Ventas u) {
+        Ventas ventas = ventasService.findById(id);
+        if (ventas != null) {
             try {
-                usuario.setNombre(u.getNombre());
-                usuario.setClave(u.getClave());
-                usuario.setEstado(u.getEstado());
-                usuario.setEmail(u.getEmail());
-                usuario.setPersona(u.getPersona());
-                usuario.setRol(u.getRol());
-                return new ResponseEntity<>(usuarioService.save(usuario), HttpStatus.CREATED);
+                
+                ventas.setCantidad_venta(u.getCantidad_venta());
+                ventas.setVenta_fecha(u.getVenta_fecha());
+                ventas.setUsuario(u.getUsuario());
+                ventas.setProductos(u.getProductos());
+                
+                return new ResponseEntity<>(ventasService.save(ventas), HttpStatus.CREATED);
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -62,8 +65,8 @@ public class UsuarioController {
         }
     }
 
-    public ResponseEntity<Usuario> elimiarUsuario(@PathVariable Integer id) {
-        usuarioService.delete(id);
+    public ResponseEntity<Ventas> elimiarVentas(@PathVariable Integer id) {
+        ventasService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
